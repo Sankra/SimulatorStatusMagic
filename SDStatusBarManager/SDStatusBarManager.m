@@ -148,10 +148,10 @@ static NSString * const SDStatusBarManagerBluetoothStateKey = @"bluetooth_state"
   strcpy(overrides->values.serviceString, [carrierText cStringUsingEncoding:NSUTF8StringEncoding]);
 
   // Battery
-//  overrides->booloverrideItemIsEnabled[8] = 1;
-//  overrides->values.boolitemIsEnabled[8] = 1;
-//  overrides->overrideBatteryDetailString = 1;
-//  strcpy(overrides->values.batteryDetailString, [@"100%" cStringUsingEncoding:NSUTF8StringEncoding]);
+  overrides->booloverrideItemIsEnabled[8] = 1;
+  overrides->values.boolitemIsEnabled[8] = 1;
+  overrides->overrideBatteryDetailString = 1;
+  strcpy(overrides->values.batteryDetailString, [@"100%" cStringUsingEncoding:NSUTF8StringEncoding]);
 
   // Bluetooth
   const BOOL bluetoothEnabled = self.bluetoothState != SDStatusBarManagerBluetoothHidden;
