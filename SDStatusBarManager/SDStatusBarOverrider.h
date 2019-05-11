@@ -24,38 +24,22 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, SDStatusBarManagerBluetoothState)
-{
-  SDStatusBarManagerBluetoothHidden = 0,
-  SDStatusBarManagerBluetoothVisibleDimmed,
-  SDStatusBarManagerBluetoothVisibleConnected
-};
+#import "SDStatusBarManager.h"
 
-typedef NS_ENUM(NSInteger, SDStatusBarManagerNetworkType)
-{
-  SDStatusBarManagerNetworkTypeWiFi = 0,
-  SDStatusBarManagerNetworkTypeGPRS,
-  SDStatusBarManagerNetworkTypeEdge,
-  SDStatusBarManagerNetworkType3G,
-  SDStatusBarManagerNetworkType4G,
-  SDStatusBarManagerNetworkTypeLTE
-};
+@protocol SDStatusBarOverrider <NSObject>
 
-@interface SDStatusBarManager : NSObject
-
-@property (copy, nonatomic) NSString *carrierName;
 @property (copy, nonatomic) NSString *timeString;
 @property (copy, nonatomic) NSString *dateString;
-@property (assign, nonatomic, readonly) BOOL usingOverrides;
-@property (assign, nonatomic) SDStatusBarManagerBluetoothState bluetoothState;
-@property (assign, nonatomic) SDStatusBarManagerNetworkType networkType;
+@property (copy, nonatomic) NSString* carrierName;
+
+@property (assign, nonatomic) BOOL bluetoothEnabled;
+@property (assign, nonatomic) BOOL bluetoothConnected;
 @property (assign, nonatomic) BOOL batteryDetailEnabled;
+@property (assign, nonatomic) SDStatusBarManagerNetworkType networkType;
 @property (assign, nonatomic) BOOL iPadDateEnabled;
 @property (assign, nonatomic) BOOL iPadGsmSignalEnabled;
 
 - (void)enableOverrides;
 - (void)disableOverrides;
-
-+ (SDStatusBarManager *)sharedInstance;
 
 @end

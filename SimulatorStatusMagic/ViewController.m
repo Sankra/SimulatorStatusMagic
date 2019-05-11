@@ -25,9 +25,14 @@
 #import "ViewController.h"
 #import "SDStatusBarManager.h"
 
-@interface ViewController ()
+@interface ViewController () 
 @property (strong, nonatomic) IBOutlet UIButton *overrideButton;
+@property (strong, nonatomic) IBOutlet UITextField *timeStringTextField;
+@property (strong, nonatomic) IBOutlet UILabel *dateStringLabel;
+@property (strong, nonatomic) IBOutlet UITextField *dateStringTextField;
+@property (strong, nonatomic) IBOutlet UITextField *carrierNameTextField;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *bluetoothSegmentedControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *networkSegmentedControl;
 @end
 
 @implementation ViewController
@@ -39,7 +44,20 @@
 
   [self setOverrideButtonText];
   [self setBluetoothSegementedControlSelectedSegment];
-}
+  [self setNetworkSegementedControlSelectedSegment];
+  [self setCarrierNameTextFieldText];
+  [self setTimeStringTextFieldText];
+  [self setDateFieldVisibility];
+  
+  NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+  if ([environment[@"SIMULATOR_STATUS_MAGIC_OVERRIDES"] isEqualToString:@"ENABLE"]) {
+    [[SDStatusBarManager sharedInstance] enableOverrides];
+    [self setOverrideButtonText];
+  }
+  if ([environment[@"SIMULATOR_STATUS_MAGIC_OVERRIDES"] isEqualToString:@"DISABLE"]) {
+    [[SDStatusBarManager sharedInstance] disableOverrides];
+    [self setOverrideButtonText];
+  }}
 
 #pragma mark Actions
 - (IBAction)overrideButtonTapped:(UIButton *)sender
@@ -53,10 +71,36 @@
   }
 }
 
+- (IBAction)carrierNameTextFieldEditingChanged:(UITextField *)textField
+{
+  [SDStatusBarManager sharedInstance].carrierName = textField.text;
+}
+
+- (IBAction)timeStringTextFieldEditingChanged:(UITextField *)textField
+{
+  [SDStatusBarManager sharedInstance].timeString = textField.text;
+}
+- (IBAction)dateStringTextFieldEditingChanged:(UITextField *)textField {
+	[SDStatusBarManager sharedInstance].dateString = textField.text;
+}
+
 - (IBAction)bluetoothStatusChanged:(UISegmentedControl *)sender
 {
   // Note: The order of the segments should match the definition of SDStatusBarManagerBluetoothState
   [[SDStatusBarManager sharedInstance] setBluetoothState:sender.selectedSegmentIndex];
+}
+
+- (IBAction)networkTypeChanged:(UISegmentedControl *)sender
+{
+  // Note: The order of the segments should match the definition of SDStatusBarManagerNetworkType
+  [[SDStatusBarManager sharedInstance] setNetworkType:sender.selectedSegmentIndex];
+}
+
+#pragma mark Text field delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+  [textField resignFirstResponder];
+  return YES;
 }
 
 #pragma mark UI helpers
@@ -73,6 +117,36 @@
 {
   // Note: The order of the segments should match the definition of SDStatusBarManagerBluetoothState
   self.bluetoothSegmentedControl.selectedSegmentIndex = [SDStatusBarManager sharedInstance].bluetoothState;
+}
+
+- (void)setNetworkSegementedControlSelectedSegment
+{
+  // Note: The order of the segments should match the definition of SDStatusBarManagerNetworkType
+  self.networkSegmentedControl.selectedSegmentIndex = [SDStatusBarManager sharedInstance].networkType;
+}
+
+- (void)setCarrierNameTextFieldText
+{
+  self.carrierNameTextField.placeholder = NSLocalizedString(@"Carrier", @"Carrier");
+  self.carrierNameTextField.text = [SDStatusBarManager sharedInstance].carrierName;
+}
+
+- (void)setTimeStringTextFieldText
+{
+  self.timeStringTextField.text = [SDStatusBarManager sharedInstance].timeString;
+}
+
+- (void)setDateStringTextFieldText
+{
+  self.dateStringTextField.text = [SDStatusBarManager sharedInstance].dateString;
+}
+
+- (void)setDateFieldVisibility
+{
+  // Only show the date field on iPad devices as the date is never shown on iPhone devices.
+  BOOL dateFieldHidden = UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad;
+  self.dateStringLabel.hidden = dateFieldHidden;
+  self.dateStringTextField.hidden = dateFieldHidden;
 }
 
 #pragma mark Status bar settings

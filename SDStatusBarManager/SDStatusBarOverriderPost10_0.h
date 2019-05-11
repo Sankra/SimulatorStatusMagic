@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
-// Copyright (c) 2014 Shiny Development
+// Copyright (c) 2014-2016 Shiny Development
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,39 +23,8 @@
 // --------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
+#import "SDStatusBarOverrider.h"
 
-typedef NS_ENUM(NSInteger, SDStatusBarManagerBluetoothState)
-{
-  SDStatusBarManagerBluetoothHidden = 0,
-  SDStatusBarManagerBluetoothVisibleDimmed,
-  SDStatusBarManagerBluetoothVisibleConnected
-};
-
-typedef NS_ENUM(NSInteger, SDStatusBarManagerNetworkType)
-{
-  SDStatusBarManagerNetworkTypeWiFi = 0,
-  SDStatusBarManagerNetworkTypeGPRS,
-  SDStatusBarManagerNetworkTypeEdge,
-  SDStatusBarManagerNetworkType3G,
-  SDStatusBarManagerNetworkType4G,
-  SDStatusBarManagerNetworkTypeLTE
-};
-
-@interface SDStatusBarManager : NSObject
-
-@property (copy, nonatomic) NSString *carrierName;
-@property (copy, nonatomic) NSString *timeString;
-@property (copy, nonatomic) NSString *dateString;
-@property (assign, nonatomic, readonly) BOOL usingOverrides;
-@property (assign, nonatomic) SDStatusBarManagerBluetoothState bluetoothState;
-@property (assign, nonatomic) SDStatusBarManagerNetworkType networkType;
-@property (assign, nonatomic) BOOL batteryDetailEnabled;
-@property (assign, nonatomic) BOOL iPadDateEnabled;
-@property (assign, nonatomic) BOOL iPadGsmSignalEnabled;
-
-- (void)enableOverrides;
-- (void)disableOverrides;
-
-+ (SDStatusBarManager *)sharedInstance;
+@interface SDStatusBarOverriderPost10_0 : NSObject <SDStatusBarOverrider>
 
 @end
